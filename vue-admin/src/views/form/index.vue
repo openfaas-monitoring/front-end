@@ -1,85 +1,144 @@
+<!--容器模块-->
 <template>
-  <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;" />
-        </el-col>
-        <el-col :span="2" class="line">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type" />
-          <el-checkbox label="Promotion activities" name="type" />
-          <el-checkbox label="Offline activities" name="type" />
-          <el-checkbox label="Simple brand exposure" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor" />
-          <el-radio label="Venue" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <el-row class="container" :gutter="20">
+    <el-col :span="8" style="margin-top=20px; height:800px;">
+      <el-card>
+        <el-table
+          ref="singleTable"
+          :data="podList"
+          highlight-current-row
+          @current-change="handleCurrentChange"
+          style="width: 100%; ">
+
+          <el-table-column
+            property="name"
+            label="当前容器列表"
+            >
+            <template slot-scope="scope">
+              {{ scope.row.pod_name}}
+            </template>
+          </el-table-column>
+      </el-table>
+      </el-card>
+    </el-col>
+
+    <el-col :span="16">
+      <el-card>
+        <el-descriptions class="server" direction="vertical" :column="2" border>
+          <el-descriptions-item label="所在服务器">
+            {{ currentNode }}
+          </el-descriptions-item>
+        </el-descriptions>        
+      </el-card>
+
+      <el-card style="height:500px;" :span="3">
+        <div  style="height:250px" ref="cpuLine"></div>
+        <div  style="height:250px" ref="memLine"></div>        
+      </el-card>
+
+    </el-col>
+
+  </el-row>
+
+
+
 </template>
 
 <script>
+import {getContainerList,getNode,getCpuMemRate} from '@/api/container'
+import * as echarts from 'echarts'
+Date.prototype.Format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
 export default {
   data() {
     return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+      podList: [],
+      currentPod: null,
+      currentNode:null,
+      cpuData:null,
+      memData:null,
+      keyArray:['cpu占用率','内存占用率']
     }
   },
+  created() {
+    this.fetchData()
+  },
   methods: {
-    onSubmit() {
-      this.$message('submit!')
+    getRate(){
+      let param = {pod_name:this.currentPod}
+      // 查询cpu和内存占用率 - 一次请求版本
+      getCpuMemRate(param).then(res => {
+        console.log(res)
+        console.log("cpu_mem_rate",res)
+        this.cpuData = res.cpuRate
+        this.memData = res.memRate
+      })
     },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
+    drawLine(){
+      this.getRate()
+              
+        let series = []
+        let time = null
+        let commonTime = null
+        
+        series.push({
+            name:this.keyArray[0],
+            data:this.cpuData.map(item => item[1]),
+            type:'line'
+          })
+        series.push({
+            name:this.keyArray[1],
+            data:this.memData.map(item => item[1]),
+            type:'line'
+          })
+        let timeSerise = []
+        this.cpuData.forEach(data => {
+          time = data[0]
+          commonTime = new Date(time*1000).Format("yyyy-MM-dd hh:mm:ss")
+          timeSerise.push(commonTime)
+        });
+        
+        const option = {
+          xAxis:{
+            data:timeSerise
+          },
+          yAxis:{},
+          legend:{
+            data:this.keyArray
+          },
+          series
+        }
+        
+        const cpuLine  = echarts.init(this.$refs.cpuLine)
+        cpuLine.setOption(option)
+    },
+    handleCurrentChange(val) {
+      this.currentPod = val.pod_name // 获得当前容器
+      this.currentNode = val.node//当前容器所在结点
+      this.drawLine()
+    },
+    fetchData() {
+      this.listLoading = true
+      getContainerList().then(response => {
+        console.log("containerList",response)
+        this.podList = response.pods
+        this.listLoading = false
       })
     }
   }
 }
 </script>
-
-<style scoped>
-.line{
-  text-align: center;
-}
-</style>
-
