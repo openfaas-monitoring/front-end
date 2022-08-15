@@ -1,6 +1,8 @@
 <template>
  <div class="app-container">
   <div class="dashboard-container">
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+
     <!-- <div class="dashboard-text">name: {{ name }}</div> -->
     <h3>
       请选择要查看的服务
@@ -100,8 +102,12 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import PanelGroup from './PanelGroup'
 import { getList } from '@/api/table'
 export default {
+  components: {
+    PanelGroup
+  },
   name: 'Dashboard',
   data() {
       return {
