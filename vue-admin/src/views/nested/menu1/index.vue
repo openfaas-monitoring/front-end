@@ -6,8 +6,8 @@
     <el-col :span="8" style="margin-top=20px; height:800px;">
       <el-card>
         <el-table
-          ref="singleTable"
-          :data="podList"
+          ref="nodeTable"
+          :data="nodeList"
           highlight-current-row
           @current-change="handleCurrentChange"
           style="width: 100%; ">
@@ -17,25 +17,38 @@
             label="服务器列表"
             >
             <template slot-scope="scope">
-              {{ scope.row.pod_name}}
+              {{ scope.row.node}}
             </template>
           </el-table-column>
       </el-table>
       </el-card>
     </el-col>
 
-    <el-col :span="16">
+    <el-col :span="8" style="margin-top=20px; height:800px;">
       <el-card>
-        <el-descriptions class="server" direction="vertical" :column="2" border>
-          <el-descriptions-item label="所在服务器">
-            {{ currentNode }}
-          </el-descriptions-item>
-        </el-descriptions>        
+        <el-table
+          class="containerTable"
+          :data="podList"
+          highlight-current-row
+          style="width: 100%; ">
+
+          <el-table-column
+            property="name"
+            label="内部容器列表"
+            >
+
+          </el-table-column>
+      </el-table>
       </el-card>
+    </el-col>
+
+    <el-col :span="16">
 
       <el-card style="height:500px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
         <div  style="height:250px" ref="memLine"></div>        
+        <div  style="height:250px" ref="IOLine"></div>    
+        <div  style="height:250px" ref="netLine"></div>    
       </el-card>
 
     </el-col>
@@ -47,27 +60,13 @@
 </template>
 
 <script>
-import {getContainerList,getNode,getCpuMemRate} from '@/api/container'
+import {getNodeList,getCpuMemRate} from '@/api/container'
 import * as echarts from 'echarts'
-Date.prototype.Format = function (fmt) {
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
 
 export default {
   data() {
     return {
+      nodeList:['No data'],
       podList: [],
       currentPod: null,
       currentNode:null,
@@ -129,15 +128,18 @@ export default {
         cpuLine.setOption(option)
     },
     handleCurrentChange(val) {
-      this.currentPod = val.pod_name // 获得当前容器
       this.currentNode = val.node//当前容器所在结点
-      this.drawLine()
+      let param = {node:this.currentNode}
+      getNodeContainers(param).then(response => {
+        this.podList = response.pod_name
+      })
+      //this.drawLine()
     },
     fetchData() {
       this.listLoading = true
-      getContainerList().then(response => {
-        console.log("containerList",response)
-        this.podList = response.pods
+      getNodeList().then(response => {
+        console.log("getNodeList",response)
+        this.nodeList = response.nodes
         this.listLoading = false
       })
     }

@@ -17,6 +17,7 @@ export const getNodeList = (param) => {
 }
 // 获取指定node的所有函数列表
 export const getNodeContainers = (param) => {
+	console.log(param)
 	return request({
 		url:'/dynamic/getPodsFromNode?node='+param.node,
 		method:'get',
@@ -28,6 +29,15 @@ export const getNodeContainers = (param) => {
 export const getCpuMemRate = (param) => {
 	return request({
 		url:'/dynamic/pod?pod='+param.pod_name,
+		method:'get',
+		param
+	})
+}
+
+//获取指定node的各类速率数据
+export const getNodeRate = (param) => {
+	return request({
+		url:'/dynamic/node?node='+param.node,
 		method:'get',
 		param
 	})
