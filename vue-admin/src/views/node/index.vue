@@ -49,7 +49,7 @@
       <el-card style="height:300px;" id="cpuLine" >
         <div  style="height:300px;" ref="cpuLine"></div>
       </el-card>
-      <el-card style=" height:300px;" id="memLine" >
+      <el-card style=" height:300px;margin-top:20px;" id="memLine" >
         <div  style="height:300px" ref="memLine"></div>
       </el-card>
     </el-col>
@@ -57,7 +57,7 @@
       <el-card style="height:300px;"  id="IOLine">
         <div  style="height:300px" ref="IOLine"></div>
       </el-card>
-      <el-card style=" height:300px;"  id="netLine">
+      <el-card style=" height:300px;margin-top:20px;"  id="netLine">
         <div  style="height:300px" ref="netLine"></div>
       </el-card>
     </el-col>
@@ -178,7 +178,7 @@ export default {
             type:'line',
             data:myData,
             areaStyle:{},
-            
+            smooth:"true"
           })
         
         let option = {

@@ -24,7 +24,7 @@
       <el-card>
         <el-table
           ref="logTable"
-          style="width: 100%; ">
+          style="width: 100%;margin-top:20px; ">
 
           <el-table-column
             property="name"
@@ -45,7 +45,7 @@
         </el-descriptions>
       </el-card>
 
-      <el-card style="height:500px;" :span="3">
+      <el-card style="height:500px;margin-top:20px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
         <div  style="height:250px" ref="memLine"></div>        
       </el-card>
