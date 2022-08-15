@@ -7,9 +7,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            nod数量
+            node数量
           </div>
-          <count-to :start-val="0" :end-val="2" :duration="0.5" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="3" :duration="0.5" class="card-panel-num" />
         </div>
       </div>
     </el-col>
