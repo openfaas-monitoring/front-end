@@ -1,10 +1,10 @@
 <!--容器模块-->
 <template>
-  <el-row class="container" :gutter="20">
+  <el-row class="container" :gutter="20"  style="padding-top:30px">
     <el-col :span="8" style="margin-top=20px; height:800px;">
       <el-card>
         <el-table
-          ref="singleTable"
+          ref="podTable"
           :data="podList"
           highlight-current-row
           @current-change="handleCurrentChange"
@@ -20,18 +20,32 @@
           </el-table-column>
       </el-table>
       </el-card>
+
+      <el-card>
+        <el-table
+          ref="logTable"
+          style="width: 100%;margin-top:20px; ">
+
+          <el-table-column
+            property="name"
+            label="日志"
+            >
+
+          </el-table-column>
+      </el-table>
+      </el-card>
     </el-col>
 
     <el-col :span="16">
       <el-card>
-        <el-descriptions class="server" direction="vertical" :column="2" border>
+        <el-descriptions class="server" direction="vertical" border>
           <el-descriptions-item label="所在服务器">
-            {{ currentNode }}
+            {{ "所在服务器："+currentNode }}
           </el-descriptions-item>
-        </el-descriptions>        
+        </el-descriptions>
       </el-card>
 
-      <el-card style="height:500px;" :span="3">
+      <el-card style="height:500px;margin-top:20px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
         <div  style="height:250px" ref="memLine"></div>        
       </el-card>
@@ -39,13 +53,10 @@
     </el-col>
 
   </el-row>
-
-
-
 </template>
 
 <script>
-import {getContainerList,getNode,getCpuMemRate} from '@/api/container'
+import {getContainerList,getCpuMemRate} from '@/api/container'
 import * as echarts from 'echarts'
 Date.prototype.Format = function (fmt) {
     var o = {
@@ -71,73 +82,105 @@ export default {
       currentNode:null,
       cpuData:null,
       memData:null,
-      keyArray:['cpu占用率','内存占用率']
+      cpuLine:null,
+      memLine:null,
+      keyArray:['cpu占用率','内存占用率'],
+      updateST:null,//轮询计时对象
     }
   },
   created() {
     this.fetchData()
   },
+  mounted(){
+    this.initChart()
+  },
+  destroyed(){
+    clearTimeout(this.updateST)
+  },
   methods: {
-    getRate(){
-      let param = {pod_name:this.currentPod}
-      // 查询cpu和内存占用率 - 一次请求版本
-      getCpuMemRate(param).then(res => {
-        console.log(res)
-        console.log("cpu_mem_rate",res)
-        this.cpuData = res.cpuRate
-        this.memData = res.memRate
-      })
+
+    // 初始化图表
+    initChart(){
+      this.cpuLine  = echarts.init(this.$refs.cpuLine)
+      this.memLine = echarts.init(this.$refs.memLine)
     },
-    drawLine(){
-      this.getRate()
-              
+    // 更新单个图表
+    updateSingleChart(myLabel,mydata,myLine){
         let series = []
-        let time = null
-        let commonTime = null
-        
+
         series.push({
-            name:this.keyArray[0],
-            data:this.cpuData.map(item => item[1]),
-            type:'line'
+            name:myLabel,
+            data:mydata,
+            type:'line',
+            smooth:"true",
+            areaStyle:{}
           })
-        series.push({
-            name:this.keyArray[1],
-            data:this.memData.map(item => item[1]),
-            type:'line'
-          })
-        let timeSerise = []
-        this.cpuData.forEach(data => {
-          time = data[0]
-          commonTime = new Date(time*1000).Format("yyyy-MM-dd hh:mm:ss")
-          timeSerise.push(commonTime)
-        });
+
+        // let timeSerise = []
+        // this.cpuData.forEach(data => {
+        //   time = data[0]
+        //   commonTime = new Date(time*1000).Format("yyyy-MM-dd hh:mm:ss")
+        //   timeSerise.push(commonTime)
+        // });
         
         const option = {
           xAxis:{
-            data:timeSerise
+            type:"time",
           },
-          yAxis:{},
+          yAxis:{
+            min:0,
+            max:100
+          },
           legend:{
-            data:this.keyArray
+            data:[myLabel]
+          },
+          tooltip:{
+            show:true
           },
           series
         }
-        
-        const cpuLine  = echarts.init(this.$refs.cpuLine)
-        cpuLine.setOption(option)
+        myLine.setOption(option)
     },
+    // 更新两个图表
+    updateChart(){
+      this.updateSingleChart(this.keyArray[0],this.cpuData,this.cpuLine)
+      this.updateSingleChart(this.keyArray[1],this.memData,this.memLine)
+    },
+
+    // 轮询方法
+    startInterval(param){
+      getCpuMemRate(param).then(res => {
+        // 数据处理 - 每个值*100
+        this.cpuData = res.cpuRate.map(item =>{
+          return [item[0],item[1]*100]
+        })
+        this.memData = res.memRate.map(item =>{
+          return [item[0],item[1]*100]
+        })
+        this.updateChart()
+        this.updateST = setTimeout(() =>{
+          clearTimeout(this.updateST)
+          this.startInterval(param)
+        },1000)
+      })
+    },
+    // 处理更改列表的选项
     handleCurrentChange(val) {
       this.currentPod = val.pod_name // 获得当前容器
       this.currentNode = val.node//当前容器所在结点
-      this.drawLine()
+      const param = {pod_name:this.currentPod}
+      clearTimeout(this.updateST)
+      this.startInterval(param)
     },
+    // 初始化列表数据
     fetchData() {
       this.listLoading = true
       getContainerList().then(response => {
-        console.log("containerList",response)
         this.podList = response.pods
+        this.$refs.podTable.setCurrentRow(this.podList[1])
         this.listLoading = false
       })
+     
     }
   }
 }
