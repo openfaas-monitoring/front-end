@@ -103,7 +103,7 @@
       </el-card>
     </el-col>
 
-    <el-col :span="16">
+    <!-- <el-col :span="16"> -->
       <!-- <el-card>
         <el-descriptions class="server" direction="vertical" border>
           <el-descriptions-item label="所在服务器">
@@ -112,12 +112,12 @@
         </el-descriptions>
       </el-card> -->
 
-      <el-card style="height:500px;margin-top:20px;" :span="3">
+      <el-card style="height:500px;margin-top:0px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
         <div  style="height:250px" ref="memLine"></div>        
       </el-card>
 
-    </el-col>
+    <!-- </el-col> -->
 
   </el-row>
 </template>
