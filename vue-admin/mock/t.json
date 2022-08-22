@@ -1,0 +1,128 @@
+{
+    "processingTypeCode": "ZUSA",
+    "serviceCategoryList": [
+        {
+            "childIncidentList": [],
+            "localCategoryName": "A",
+            "ID": "CA_16"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "AAA",
+            "ID": "CA_13"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "abc",
+            "ID": "CA_15"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "BAa",
+            "ID": "CA_17"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "BAb",
+            "ID": "CA_18"
+        },
+        {
+            "childIncidentList": [
+                {
+                    "localCategoryName": "Aaac",
+                    "ID": "CA_20"
+                },
+                {
+                    "localCategoryName": "Aacc",
+                    "ID": "CA_19"
+                },
+                {
+                    "localCategoryName": "Access Login",
+                    "ID": "CA_3"
+                }
+            ],
+            "localCategoryName": "Bcb",
+            "ID": "CA_2"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "OO",
+            "ID": "CA_7"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "oo",
+            "ID": "CA_14"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "PP",
+            "ID": "CA_12"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "QQ",
+            "ID": "CA_10"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "RR",
+            "ID": "CA_11"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "一个测试y",
+            "ID": "CA_5"
+        },
+        {
+            "childIncidentList": [
+                {
+                    "localCategoryName": "AAA",
+                    "ID": "CA_24"
+                },
+                {
+                    "localCategoryName": "aAA",
+                    "ID": "CA_9"
+                },
+                {
+                    "localCategoryName": "CCC",
+                    "ID": "CA_23"
+                }
+            ],
+            "localCategoryName": "中国Z",
+            "ID": "CA_8"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "宝马B",
+            "ID": "CA_22"
+        },
+        {
+            "childIncidentList": [
+                {
+                    "localCategoryName": "AA",
+                    "ID": "CA_21"
+                },
+                {
+                    "localCategoryName": "aa",
+                    "ID": "CA_6"
+                },
+                {
+                    "localCategoryName": "bb",
+                    "ID": "CA_4"
+                },
+                {
+                    "localCategoryName": "Salary",
+                    "ID": "CA_1"
+                }
+            ],
+            "localCategoryName": "核心H",
+            "ID": "CORE_HR_0"
+        },
+        {
+            "childIncidentList": [],
+            "localCategoryName": "阿婆A",
+            "ID": "CA_33"
+        }
+    ]
+}

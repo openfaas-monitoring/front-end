@@ -1,0 +1,351 @@
+[
+    {
+        "VersionID": "62",
+        "ServiceCategoryCatalogueNamelanguageCode": "",
+        "ServiceCategory": [
+            {
+                "ObjectID": "0234D237E6621EDD87BF5A929B5698A8",
+                "TypeCode": "2",
+                "CatalogueStartDateTime": "/Date(1660719977000)/",
+                "CategoryUUID": "0234D237-E662-1EDD-87BF-5A929B5698A8",
+                "CatalogueEndDateTime": "/Date(253400279400000)/",
+                "EntityLastChangedOn": "/Date(1660719914638)/",
+                "ServiceCategoryName": [
+                    {
+                        "languageCodeText": "Englisch",
+                        "ServiceCategory": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B56B8A8')/ServiceCategory"
+                            }
+                        },
+                        "ObjectID": "0234D237E6621EDD87BF5A929B56B8A8",
+                        "ETag": "/Date(1660719922884)/",
+                        "ServiceCategoryCatalogue": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B56B8A8')/ServiceCategoryCatalogue"
+                            }
+                        },
+                        "__metadata": {
+                            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                            "type": "c4codata.ServiceCategoryName",
+                            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B56B8A8')"
+                        },
+                        "languageCode": "EN",
+                        "ParentObjectID": "0234D237E6621EDD87BF5A929B5698A8",
+                        "Name": "Salary"
+                    },
+                    {
+                        "languageCodeText": "Chinesisch",
+                        "ServiceCategory": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B56D8A8')/ServiceCategory"
+                            }
+                        },
+                        "ObjectID": "0234D237E6621EDD87BF5A929B56D8A8",
+                        "ETag": "/Date(1660719922884)/",
+                        "ServiceCategoryCatalogue": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B56D8A8')/ServiceCategoryCatalogue"
+                            }
+                        },
+                        "__metadata": {
+                            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                            "type": "c4codata.ServiceCategoryName",
+                            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B56D8A8')"
+                        },
+                        "languageCode": "ZH",
+                        "ParentObjectID": "0234D237E6621EDD87BF5A929B5698A8",
+                        "Name": "搬迁"
+                    }
+                ],
+                "LifeCycleStatusCodeText": "Freigegeben",
+                "CatalogueID": "ID_61",
+                "ETag": "/Date(1660719922884)/",
+                "TypeCodeText": "Vorfall",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5698A8')/ServiceCategoryCatalogue"
+                    }
+                },
+                "LifeCycleStatusCode": "2",
+                "ServiceCategoryDescription": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5698A8')/ServiceCategoryDescription"
+                    }
+                },
+                "ID": "CA_1",
+                "ParentCategoryUUID": "0234D237-E662-1EDD-87BF-5A929B56F8A8",
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategory",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5698A8')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+                "CatalogueVersionID": "62"
+            },
+            {
+                "ObjectID": "0234D237E6621EDD87BF5A929B57B8A8",
+                "TypeCode": "2",
+                "CatalogueStartDateTime": "/Date(1660719977000)/",
+                "CategoryUUID": "0234D237-E662-1EDD-87BF-5A929B57B8A8",
+                "CatalogueEndDateTime": "/Date(253400279400000)/",
+                "EntityLastChangedOn": "/Date(1660719914638)/",
+                "ServiceCategoryName": [
+                    {
+                        "languageCodeText": "Englisch",
+                        "ServiceCategory": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B57D8A8')/ServiceCategory"
+                            }
+                        },
+                        "ObjectID": "0234D237E6621EDD87BF5A929B57D8A8",
+                        "ETag": "/Date(1660719922884)/",
+                        "ServiceCategoryCatalogue": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B57D8A8')/ServiceCategoryCatalogue"
+                            }
+                        },
+                        "__metadata": {
+                            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                            "type": "c4codata.ServiceCategoryName",
+                            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B57D8A8')"
+                        },
+                        "languageCode": "EN",
+                        "ParentObjectID": "0234D237E6621EDD87BF5A929B57B8A8",
+                        "Name": "Access Login"
+                    },
+                    {
+                        "languageCodeText": "Chinesisch",
+                        "ServiceCategory": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B57F8A8')/ServiceCategory"
+                            }
+                        },
+                        "ObjectID": "0234D237E6621EDD87BF5A929B57F8A8",
+                        "ETag": "/Date(1660719922884)/",
+                        "ServiceCategoryCatalogue": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B57F8A8')/ServiceCategoryCatalogue"
+                            }
+                        },
+                        "__metadata": {
+                            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                            "type": "c4codata.ServiceCategoryName",
+                            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B57F8A8')"
+                        },
+                        "languageCode": "ZH",
+                        "ParentObjectID": "0234D237E6621EDD87BF5A929B57B8A8",
+                        "Name": "访问登录"
+                    }
+                ],
+                "LifeCycleStatusCodeText": "Freigegeben",
+                "CatalogueID": "ID_61",
+                "ETag": "/Date(1660719922884)/",
+                "TypeCodeText": "Vorfall",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B57B8A8')/ServiceCategoryCatalogue"
+                    }
+                },
+                "LifeCycleStatusCode": "2",
+                "ServiceCategoryDescription": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B57B8A8')/ServiceCategoryDescription"
+                    }
+                },
+                "ID": "CA_3",
+                "ParentCategoryUUID": "0234D237-E662-1EDD-87BF-5A929B5758A8",
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategory",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B57B8A8')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+                "CatalogueVersionID": "62"
+            },
+            {
+                "ObjectID": "0234D237E6621EDD87BF5A929B5818A8",
+                "TypeCode": "2",
+                "CatalogueStartDateTime": "/Date(1660719977000)/",
+                "CategoryUUID": "0234D237-E662-1EDD-87BF-5A929B5818A8",
+                "CatalogueEndDateTime": "/Date(253400279400000)/",
+                "EntityLastChangedOn": "/Date(1660719914638)/",
+                "ServiceCategoryName": [
+                    {
+                        "languageCodeText": "Englisch",
+                        "ServiceCategory": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B5838A8')/ServiceCategory"
+                            }
+                        },
+                        "ObjectID": "0234D237E6621EDD87BF5A929B5838A8",
+                        "ETag": "/Date(1660719922884)/",
+                        "ServiceCategoryCatalogue": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B5838A8')/ServiceCategoryCatalogue"
+                            }
+                        },
+                        "__metadata": {
+                            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                            "type": "c4codata.ServiceCategoryName",
+                            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B5838A8')"
+                        },
+                        "languageCode": "EN",
+                        "ParentObjectID": "0234D237E6621EDD87BF5A929B5818A8",
+                        "Name": "bb"
+                    }
+                ],
+                "LifeCycleStatusCodeText": "Freigegeben",
+                "CatalogueID": "ID_61",
+                "ETag": "/Date(1660719922884)/",
+                "TypeCodeText": "Vorfall",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5818A8')/ServiceCategoryCatalogue"
+                    }
+                },
+                "LifeCycleStatusCode": "2",
+                "ServiceCategoryDescription": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5818A8')/ServiceCategoryDescription"
+                    }
+                },
+                "ID": "CA_4",
+                "ParentCategoryUUID": "0234D237-E662-1EDD-87BF-5A929B56F8A8",
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategory",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5818A8')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+                "CatalogueVersionID": "62"
+            },
+            {
+                "ObjectID": "0234D237E6621EDD87BF5A929B5898A8",
+                "TypeCode": "2",
+                "CatalogueStartDateTime": "/Date(1660719977000)/",
+                "CategoryUUID": "0234D237-E662-1EDD-87BF-5A929B5898A8",
+                "CatalogueEndDateTime": "/Date(253400279400000)/",
+                "EntityLastChangedOn": "/Date(1660719914638)/",
+                "ServiceCategoryName": [
+                    {
+                        "languageCodeText": "Englisch",
+                        "ServiceCategory": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B58B8A8')/ServiceCategory"
+                            }
+                        },
+                        "ObjectID": "0234D237E6621EDD87BF5A929B58B8A8",
+                        "ETag": "/Date(1660719922884)/",
+                        "ServiceCategoryCatalogue": {
+                            "__deferred": {
+                                "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B58B8A8')/ServiceCategoryCatalogue"
+                            }
+                        },
+                        "__metadata": {
+                            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                            "type": "c4codata.ServiceCategoryName",
+                            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryNameCollection('0234D237E6621EDD87BF5A929B58B8A8')"
+                        },
+                        "languageCode": "EN",
+                        "ParentObjectID": "0234D237E6621EDD87BF5A929B5898A8",
+                        "Name": "aa"
+                    }
+                ],
+                "LifeCycleStatusCodeText": "Freigegeben",
+                "CatalogueID": "ID_61",
+                "ETag": "/Date(1660719922884)/",
+                "TypeCodeText": "Vorfall",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5898A8')/ServiceCategoryCatalogue"
+                    }
+                },
+                "LifeCycleStatusCode": "2",
+                "ServiceCategoryDescription": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5898A8')/ServiceCategoryDescription"
+                    }
+                },
+                "ID": "CA_6",
+                "ParentCategoryUUID": "0234D237-E662-1EDD-87BF-5A929B56F8A8",
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategory",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5A929B5898A8')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+                "CatalogueVersionID": "62"
+            },
+            {
+                "ObjectID": "0234D237E6621EDD87BF5E284F5F58D9",
+                "TypeCode": "1",
+                "CatalogueStartDateTime": "/Date(1660719977000)/",
+                "CategoryUUID": "0234D237-E662-1EDD-87BF-5E284F5F58D9",
+                "CatalogueEndDateTime": "/Date(253400279400000)/",
+                "EntityLastChangedOn": "/Date(1660719914638)/",
+                "ServiceCategoryName": [],
+                "LifeCycleStatusCodeText": "Freigegeben",
+                "CatalogueID": "ID_61",
+                "ETag": "/Date(1660719922884)/",
+                "TypeCodeText": "Prozess",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5E284F5F58D9')/ServiceCategoryCatalogue"
+                    }
+                },
+                "LifeCycleStatusCode": "2",
+                "ServiceCategoryDescription": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5E284F5F58D9')/ServiceCategoryDescription"
+                    }
+                },
+                "ID": "CA_7",
+                "ParentCategoryUUID": null,
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategory",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCollection('0234D237E6621EDD87BF5E284F5F58D9')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+                "CatalogueVersionID": "62"
+            }
+        ],
+        "ObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+        "ServiceCategoryCatalogueName": "",
+        "ServiceCategoryCatalogueNamelanguageCodeText": "",
+        "EntityLastChangedOn": "/Date(1660719922884)/",
+        "LifeCycleStatusCodeText": "Freigegeben",
+        "StartDateTime": "/Date(1660719977000)/",
+        "ETag": "/Date(1660719922884)/",
+        "EndDateTime": "/Date(253400279400000)/",
+        "LifeCycleStatusCode": "2",
+        "ID": "ID_61",
+        "__metadata": {
+            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+            "type": "c4codata.ServiceCategoryCatalogue",
+            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCatalogueCollection('0234D237E6621EDD87BF5A929B5638A8')"
+        },
+        "ServiceCategoryCatalogueUsage": [
+            {
+                "BusinessTransactionDocumentProcessingTypeCodeText": "",
+                "BusinessTransactionDocumentProcessingTypeCode": "ZUSA",
+                "UsageCode": "SERVICE_REQUEST",
+                "ObjectID": "0234D237E6621EDD87BF5A929B5658A8",
+                "ETag": "/Date(1660719922884)/",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCatalogueUsageCollection('0234D237E6621EDD87BF5A929B5658A8')/ServiceCategoryCatalogue"
+                    }
+                },
+                "UsageCodeText": "GO-Serviceanforderung",
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategoryCatalogueUsage",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCatalogueUsageCollection('0234D237E6621EDD87BF5A929B5658A8')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8"
+            }
+        ]
+    }
+]

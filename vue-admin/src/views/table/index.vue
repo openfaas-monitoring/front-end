@@ -4,7 +4,22 @@
         <div slot="header" class="clearfix">
           <h3>please select a function</h3>
         </div>
-  <br/>
+  <template>
+  <div class="app-container">
+    <el-input v-model="filterText" placeholder="Filter keyword" @change="search" style="margin-bottom:10px;" />
+  </div>
+</template>
+<template v-if="showSearch">
+   <el-button 
+  type="success"
+    effect="dark"
+    v-on:click="onClick(toShow)">
+    {{ toShow+"  "}}
+  </el-button>
+   <br/>
+    <br/>
+    </template>
+   
   <el-button 
   type="success"
     v-for="item in allFunctionList"
@@ -91,13 +106,15 @@
       <el-card>
         <el-table
           ref="logTable"
+          :data="log"
           style="width: 100%;margin-top:20px; ">
 
           <el-table-column
             property="name"
             label="日志"
             >
-
+            <p>1111111111111111111111111111111111111111111111111111
+            </p>
           </el-table-column>
       </el-table>
       </el-card>
@@ -133,6 +150,7 @@ import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import PanelGroup from './components/PanelGroup'
 import {getContainerList,getCpuMemRate} from '@/api/container'
+import {getFuncList} from '@/api/func'
 import * as echarts from 'echarts'
 Date.prototype.Format = function (fmt) {
     var o = {
@@ -171,10 +189,10 @@ Date.prototype.Format = function (fmt) {
   created() {
     this.fetchData()
     this.getAllFunction()
-    this.getFunctionInfo('add')
-    this.getFunctionInfo('errlog')
-    this.getFunctionInfo('nodeinfo')
-    this.getFunctionInfo('test')
+    // this.getFunctionInfo('add')
+    // this.getFunctionInfo('errlog')
+    // this.getFunctionInfo('nodeinfo')
+    // this.getFunctionInfo('test')
   },
     components: {
     LineChart,
@@ -184,6 +202,9 @@ Date.prototype.Format = function (fmt) {
   },
     data() {
       return {
+        toShow:null,
+        showSearch:false,
+        filterText:null,
          podList: [],
       currentPod: null,
       currentNode:null,
@@ -224,12 +245,6 @@ Date.prototype.Format = function (fmt) {
     mounted () {
       this.initChart()
     axios
-      .get('http://10.60.150.24:8000/static/function?func=add')
-      .then(response => (this.info = response))
-      .catch(function (error) { // 请求失败处理
-        console.log(error);
-      });
-    axios
       .get('http://10.60.150.24:8000/global/functions')
       .then(response => (this.functionList = response.data.func))
       .catch(function (error) { // 请求失败处理
@@ -263,6 +278,7 @@ Date.prototype.Format = function (fmt) {
       },
       onClick(item){
         this.curFuc = item
+        this.getFunctionInfo(item)
         this.getTabelData()
         this.getFuncY()
         this.currentPod = item // 获得当前容器
@@ -327,6 +343,17 @@ Date.prototype.Format = function (fmt) {
       
  
     },
+    search(){
+    this.showSearch = false
+    console.log(this.filterText);
+    for(var item in this.allFunctionList){
+      if(this.filterText==this.allFunctionList[item]||this.allFunctionList[item].match(this.filterText)!=null){
+          this.showSearch = true
+          this.toShow = this.allFunctionList[item]
+      }
+    }
+    
+},
     handleEdit(index, row) {
         console.log(index, row);
       },
@@ -414,6 +441,12 @@ Date.prototype.Format = function (fmt) {
         this.$refs.podTable.setCurrentRow(this.podList[1])
         this.listLoading = false
       })
+      getFuncList().then(response => { 
+        this.functionList = response.func
+        
+      }
+      )
+
      
     } 
     },

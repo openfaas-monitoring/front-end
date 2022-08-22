@@ -1,0 +1,45 @@
+A -> a -> BBAB -> BBB -> bbb -> BBBB
+A - B -C -a 
+[
+    {
+        "VersionID": "62",
+        "ServiceCategoryCatalogueNamelanguageCode": "",
+        "ServiceCategory": [],
+        "ObjectID": "0234D237E6621EDD87BF5A929B5638A8",
+        "ServiceCategoryCatalogueName": "",
+        "ServiceCategoryCatalogueNamelanguageCodeText": "",
+        "EntityLastChangedOn": "/Date(1660719922884)/",
+        "LifeCycleStatusCodeText": "Freigegeben",
+        "StartDateTime": "/Date(1660719977000)/",
+        "ETag": "/Date(1660719922884)/",
+        "EndDateTime": "/Date(253400279400000)/",
+        "LifeCycleStatusCode": "2",
+        "ID": "ID_61",
+        "__metadata": {
+            "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+            "type": "c4codata.ServiceCategoryCatalogue",
+            "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCatalogueCollection('0234D237E6621EDD87BF5A929B5638A8')"
+        },
+        "ServiceCategoryCatalogueUsage": [
+            {
+                "BusinessTransactionDocumentProcessingTypeCodeText": "",
+                "BusinessTransactionDocumentProcessingTypeCode": "ZUSA",
+                "UsageCode": "SERVICE_REQUEST",
+                "ObjectID": "0234D237E6621EDD87BF5A929B5658A8",
+                "ETag": "/Date(1660719922884)/",
+                "ServiceCategoryCatalogue": {
+                    "__deferred": {
+                        "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCatalogueUsageCollection('0234D237E6621EDD87BF5A929B5658A8')/ServiceCategoryCatalogue"
+                    }
+                },
+                "UsageCodeText": "GO-Serviceanforderung",
+                "__metadata": {
+                    "etag": "W/\"datetimeoffset'2022-08-17T07%3A05%3A22.8844970Z'\"",
+                    "type": "c4codata.ServiceCategoryCatalogueUsage",
+                    "uri": "https://my330958.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/ServiceCategoryCatalogueUsageCollection('0234D237E6621EDD87BF5A929B5658A8')"
+                },
+                "ParentObjectID": "0234D237E6621EDD87BF5A929B5638A8"
+            }
+        ]
+    }
+]
