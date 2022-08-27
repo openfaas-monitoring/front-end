@@ -457,6 +457,12 @@ export default {
         link.append("title")
             .text(d => d.type) 
         
+        // TODO 根据边的类型不同改变边的弧度
+        
+
+
+
+
         // 画边
         const edgepaths = svg.selectAll(".edgepath")
                 .data(dataset.links) 
