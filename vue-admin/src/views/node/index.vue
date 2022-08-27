@@ -108,20 +108,6 @@ export default {
     clearTimeout(this.updateST)
   },
   methods: {
-    // 获取数据
-    getRate(param){
-      // let param = {node:this.currentNode}
-      // 查询各类速率 - 一次请求版本
-      getNodeRate(param).then(res => {
-        this.cpuData = res.cpuRate
-        this.memData = res.memRate
-        this.diskRead = res.diskRead
-        this.diskWrite = res.diskWrite
-        this.netDown = res.networkDown
-        this.netUp = res.networkUp
-        console.log("readRate finished")
-      })
-    },
     initChart(){
       this.cpuLine =  echarts.init(this.$refs.cpuLine)
       this.memLine = echarts.init(this.$refs.memLine)
@@ -190,8 +176,6 @@ export default {
           yAxis:{
             type:'value',
             name:'%',
-            min:0,
-            max:100
           },
           legend:{
             data:[myLabel]
