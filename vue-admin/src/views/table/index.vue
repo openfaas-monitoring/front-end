@@ -73,64 +73,24 @@
     </el-table-column>
   </el-table>
   </div>
-  <!-- <br/>
-  <br/>
-  <br/> -->
+
   <div>
-    <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :v-bind:char-data="funcY" />
-    </el-row>
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :v-if="flag" :v-bind:chart-data="lineChartData" />
-    </el-row> -->
+
 
   <template>
   <el-row class="container" :gutter="20"  style="padding-top:30px">
     <el-col :span="8" style="margin-top=20px; height:800px;">
-      <!-- <el-card>
-        <el-table
-          ref="podTable"
-          :data="podList"
-          highlight-current-row
-          @current-change="handleCurrentChange"
-          style="width: 100%; ">
-
-          <el-table-column
-            property="name"
-            label="当前容器列表"
-            >
-            <template slot-scope="scope">
-              {{ scope.row.pod_name}}
-            </template>
-          </el-table-column>
-      </el-table>
-      </el-card> -->
 
       <el-card>
-        <el-table
-          ref="logTable"
-          :data="log"
-          style="width: 100%;margin-top:20px; ">
-
-          <el-table-column
-            property="name"
-            label="日志"
-            >
-            <p>1111111111111111111111111111111111111111111111111111
-            </p>
-          </el-table-column>
-      </el-table>
+           <h3 style="color:grey">日志
+            </h3>
+        <span>
+           {{this.log}}
+        </span>
+     
       </el-card>
     </el-col>
 
-    <!-- <el-col :span="16"> -->
-      <!-- <el-card>
-        <el-descriptions class="server" direction="vertical" border>
-          <el-descriptions-item label="所在服务器">
-            {{ "所在服务器："+currentNode }}
-          </el-descriptions-item>
-        </el-descriptions>
-      </el-card> -->
 
       <el-card style="height:500px;margin-top:0px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
@@ -153,7 +113,7 @@ import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import PanelGroup from './components/PanelGroup'
 import {getContainerList,getCpuMemRate} from '@/api/container'
-import {getFuncList} from '@/api/func'
+import {getFuncList,getLog} from '@/api/func'
 import * as echarts from 'echarts'
 Date.prototype.Format = function (fmt) {
     var o = {
@@ -170,24 +130,7 @@ Date.prototype.Format = function (fmt) {
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
-// const lineChartData = {
-//   newVisitis: {
-//     expectedData: [100, 120, 161, 134, 105, 160, 165],
-//     actualData: [120, 82, 91, 154, 162, 140, 145]
-//   },
-//   messages: {
-//     expectedData: [200, 192, 120, 144, 160, 130, 140],
-//     actualData: [180, 160, 151, 106, 145, 150, 130]
-//   },
-//   purchases: {
-//     expectedData: [80, 100, 121, 104, 105, 90, 100],
-//     actualData: [120, 90, 100, 138, 142, 130, 130]
-//   },
-//   shoppings: {
-//     expectedData: [130, 140, 141, 142, 145, 150, 160],
-//     actualData: [120, 82, 91, 154, 162, 140, 130]
-//   }
-// }
+
   export default {
   created() {
     this.fetchData()
@@ -205,6 +148,7 @@ Date.prototype.Format = function (fmt) {
   },
     data() {
       return {
+        log:null,
         toShow:null,
         showSearch:false,
         filterText:null,
@@ -280,6 +224,7 @@ Date.prototype.Format = function (fmt) {
         this.tableData[0].nod = this.dynamicFuncInfo.get(this.curFuc).nod
       },
       onClick(item){
+        
         this.curFuc = item
         this.getFunctionInfo(item)
         this.getTabelData()
@@ -341,6 +286,11 @@ Date.prototype.Format = function (fmt) {
       .catch(function (error) { // 请求失败处理
         console.log(error);
       });
+        getLog(funcName).then(response => {
+        this.log =  response.logs
+       this.dynamicFuncInfo.get(funcName).log = response.logs
+       
+      })
       
         
       
@@ -446,12 +396,269 @@ Date.prototype.Format = function (fmt) {
       })
       getFuncList().then(response => { 
         this.functionList = response.func
-        
+        for(var item in this.functionList){
+          this.getFunctionInfo(item)
+        }
       }
       )
 
      
-    } 
+    } ,
+    getFuncSource(funcName){
+            // 获取函数调用图信息
+      getSource(funcName).then(response =>{
+        this.funcSource = response.source_code
+        this.funcConfig = response.config
+        this.mapFuncData()
+        this.drawFunction()     
+      })
+      .catch(function (error) { // 请求失败处理
+        console.log(error)
+      })
+    },
+
+          // 调用图数据处理
+    mapFuncData(){
+      let that = this
+      that.funcGraphData = {}
+      let n_idx = 0
+      let nodes = [],links=[]
+      that.funcConfig.forEach((item,index) => {
+        
+        if(index === 0){
+           n_idx = n_idx + 1
+            let node_1 = {
+            id: n_idx,
+            name:item[0],
+            label:item[0],
+            group:"User 0",
+            runtime:20
+            }
+           nodes.push(node_1)
+         
+        }
+        let inFlag = nodes.find(value  => {
+            return value.name === item[1]
+        })
+        
+        if(inFlag === undefined){
+            
+            n_idx = n_idx + 1
+            
+            let node_2 = {
+                id: n_idx,
+                name:item[1],
+                label:item[1],
+                group:"User 0",
+                runtime:30
+            }
+            nodes.push(node_2)
+        }
+        let s_idx,e_idx
+
+        nodes.find((value) => {
+            if(value.name === item[0]){
+                s_idx = value.id
+            }
+            if(value.name === item[1]){
+                e_idx = value.id
+            }
+        })
+        let link = {
+          source:s_idx,
+          target:e_idx,
+          type:item[2]
+        }
+        links.push(link)
+
+      })
+      that.funcGraphData['nodes'] = nodes
+      that.funcGraphData['links'] = links
+
+    console.log("函数调用数据转化完成",this.funcGraphData)
+
+    },
+    // 清空整张图
+    removeFuncGraph(){
+      d3.select('#funcgraph')
+        .selectAll('*')
+        .remove();                    //清空SVG中的内容
+
+    },
+    // 绘制函数调用图
+    drawFunction(){
+        // 保证此时数据已经拿到
+        console.log("开始画图")
+        console.log(this.funcGraphData.links)
+
+      function _margin(){return(
+      {top: 30, right: 50, bottom: 5, left: 5}
+      )}
+
+      function _width(margin){return(
+      400 - margin.left - margin.right
+      )}
+
+      function _height(margin){return(
+      400 - margin.top - margin.bottom
+      )}
+
+      function ticked() {
+        link.attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y)
+        
+        node.attr("transform", d=> `translate(${d.x},${d.y})`)
+
+         edgepaths.attr('d', d => 'M' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y)
+      }
+      function drag(simulation){
+            function dragstarted(event, d) {
+                if (!event.active) 
+                  simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            
+            function dragended(event, d) {
+                if (!event.active) 
+                  simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+            
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                // .on("end", dragended);
+            }
+
+      let margin = _margin()
+      let height = _height(margin)
+      let width = _width(margin)
+
+
+      // 获取div
+      const svg = d3.select("#funcgraph")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("style","margin:0 auto")
+        .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`)
+
+      svg.append('defs').append('marker')
+        .attr("id",'arrowhead')
+        .attr('viewBox','-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+        .attr('refX',10) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+        .attr('refY',0)
+        .attr('orient','auto')
+            .attr('markerWidth',5)
+            .attr('markerHeight',5)
+            .attr('xoverflow','visible')
+            .attr('yoverflow','visible')
+        .append('svg:path')
+        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+        .attr('fill', '#999')
+        
+
+        let dataset = this.funcGraphData
+
+        // 颜色
+        let colorScale = d3.scaleOrdinal() //=d3.scaleOrdinal(d3.schemeSet2)
+          .domain(["Team A"])
+          .range(['#ff9e6d'])
+
+        // 初始化边
+        const link = svg.selectAll(".links")
+                .data(dataset.links)
+                .enter()
+                .append("line")
+                .attr("class", "links")
+                .attr("stroke-width",3)
+                .attr('marker-end','url(#arrowhead)') //The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given shape.
+
+        
+        // 下面这个是，会以xx方式展示
+        link.append("title")
+            .text(d => d.type) 
+        
+        // 画边
+        const edgepaths = svg.selectAll(".edgepath")
+                .data(dataset.links) 
+                .enter()
+                .append('path')
+                .attr('class','edgepath')
+                .attr('fill-opacity',0)
+                .attr('stroke-opacity',0)
+                .attr('id', (d,i) => {return 'edgepath'+i})
+                .style("pointer-events","none")
+
+        const edgelabels = svg.selectAll(".edgelabel")
+        .data(dataset.links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr('class', 'edgelabel')
+        .attr('id', function (d, i) {return 'edgelabel' + i})
+        .attr('font-size', 13)
+        .attr('fill', '#aaa')
+
+        // 画边的标签
+        edgelabels.append('textPath') //To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.
+              .attr('xlink:href', function (d, i) {return '#edgepath' + i})
+              .style("text-anchor", "middle")
+              .style("pointer-events", "none")
+              .attr("startOffset", "50%")
+              .text(d => d.type)
+  
+    //  Initialize the nodes 让结点能被拖拽
+      const node = svg.selectAll(".nodes")
+          .data(dataset.nodes)
+          .enter()
+          .append("g")
+          .attr("class", "nodes")
+         .call(drag(simulation));
+
+      node.append("circle")
+          .attr("r", d=>8)
+          .style("stroke-opacity",0)
+          .style("stroke-width", 1.5)
+          .style("fill", d => colorScale(d.group))
+
+        node.append("text")
+            .attr("x", 8)
+            .attr("y", "0.31em")
+            .text(d => d.name)
+            .clone(true).lower()
+            .attr("fill", "none")
+            .attr("stroke-width", 10);
+
+      // simulation
+      let simulation = d3.forceSimulation()
+              .force("link", d3.forceLink() // This force provides links between nodes
+                              .id(d => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
+                              .distance(120)
+              ) 
+              
+              .force("charge", d3.forceManyBody().strength(-700)) // This adds repulsion (if it's negative) between nodes. 
+              .force("center", d3.forceCenter(width / 2, height / 2))
+       simulation
+        .nodes(dataset.nodes)
+        .on("tick", ticked)
+
+        simulation.force("link")
+                .links(dataset.links)
+                      
+
+    
+    },
     },
    
   }

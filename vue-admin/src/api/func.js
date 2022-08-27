@@ -16,7 +16,15 @@ export const getGlobalNodes = (param) => {
 }
 export const getLog =(param) =>{
 	return request({
-		url:'/logs',
+		url:'/logs?func='+param,
+		method:'get',
+		param
+	})
+}
+// 获取函数的源码及运行调用图信息
+export const getSource =(param) =>{
+	return request({
+		url:'/source?func='+param,
 		method:'get',
 		param
 	})

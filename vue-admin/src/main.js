@@ -14,6 +14,13 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+
+import http from 'axios'
+
+//vue-highlgihtjs
+import VueHighlightJS from 'vue-highlightjs'
+import 'highlight.js/styles/atom-one-dark.css'
+
 import echarts from 'echarts';
 Vue.prototype.$echarts=echarts;
 Vue.use(echarts)
@@ -34,8 +41,11 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
-
+Vue.prototype.$http = http
 Vue.config.productionTip = false
+
+// Tell Vue.js to use vue-highlightjs
+Vue.use(VueHighlightJS)
 
 new Vue({
   el: '#app',
