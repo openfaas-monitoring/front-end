@@ -1,14 +1,14 @@
 <!--容器模块-->
 <template>
   <el-row class="container" :gutter="20"  style="padding-top:20px; margin:0 auto">
-    <el-col :span="6" style="margin-top=10px; height:900px; overflow-x:auto;">
+    <el-col :span="6" style="margin-top=10px; height:780px; overflow-x:auto;">
       <el-card style="height:100%">
         <el-table
           ref="podTable"
           :data="podList"
           highlight-current-row
           @current-change="handleCurrentChange"
-          style="width: 100%; ">
+          style="width: 100%; overflow:visible; ">
 
           <el-table-column
             property="name"
@@ -37,7 +37,8 @@
         <div  style="height:200px;" ref="cpuLine"></div>
       </el-card>
       <el-card style="height:500px; margin-top:10px;" >
-        <div id="funcgraph" style='overflow-x: auto; overflow-y:auto;'></div>
+
+        <div id="funcgraph" style='max-height:430px;overflow: scroll;'></div>
         
       </el-card>
     </el-col>
@@ -45,21 +46,23 @@
       <el-card style="height:200px;"  >
        <div  style="height:200px" ref="memLine"></div>
       </el-card>
-      <el-card style="height:500px; margin-top:10px;">
-        <pre v-highlightjs="funcSource"><code class="python" style="overflow-x: auto; overflow-y:auto;"></code></pre>
+      <el-card style="height:500px; margin-top:10px; padding-bottom:20px">
+
+        <pre v-highlightjs="funcSource" style="max-height:430px;overflow: scroll;"><code class="python"></code></pre>
       </el-card>
     </el-col>
     </el-col >
 
-    <el-col :span="8">
+    <!-- <el-col :span="8">
 
-    </el-col>
+    </el-col> -->
   </el-row>
 </template>
 
 <script>
+import axios from 'axios'
 import {getContainerList,getCpuMemRate} from '@/api/container'
-import {getSource} from '@/api/func'
+import {getSource,getStatFunc} from '@/api/func'
 import * as d3 from 'd3'
 import * as echarts from 'echarts'
 
@@ -71,12 +74,12 @@ Date.prototype.Format = function (fmt) {
         "m+": this.getMinutes(), //分
         "s+": this.getSeconds(), //秒
         "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
+        "S": this.getMilliseconds() // 毫秒
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
+  return fmt;
 }
 
 export default {
@@ -94,6 +97,13 @@ export default {
       funcConfig:null,
       funcSource:null,
       funcGraphData:{},
+      funcUpdateST:null, // 函数调用图计时对象 TODO 是否可以和速率图共用
+      funcRunningAPI:null,
+      funcRunningInfo:null,
+      funcStatus:{
+        "running": 1,
+        "stop": 0
+      }
     }
   },
   created() {
@@ -104,6 +114,7 @@ export default {
   },
   destroyed(){
     clearTimeout(this.updateST)
+    clearTimeout(this.funcUpdateST)
   },
   methods: {
 
@@ -166,17 +177,23 @@ export default {
           clearTimeout(this.updateST)
           this.startInterval(param)
         },1000)
+      }).catch(function (error) { // 请求失败处理
+        console.log(error)
       })
     },
     // 处理更改列表的选项
     handleCurrentChange(val) {
-      this.removeFuncGraph()
+   
       this.currentPod = val.pod_name // 获得当前容器
       this.currentNode = val.node//当前容器所在结点
       const param = {pod_name:this.currentPod}
-      this.getFuncSource(param.pod_name)
+      
       clearTimeout(this.updateST)
       this.startInterval(param)
+      
+      const funcName = this.currentPod
+      this.getFuncSource(funcName)
+
       
     },
     // 初始化列表数据
@@ -189,46 +206,90 @@ export default {
         this.getFuncSource(this.currentPod.pod_name)
         this.listLoading = false
       })
-    },
-
-    getFuncSource(funcName){
-            // 获取函数调用图信息
-      getSource(funcName).then(response =>{
-        this.funcSource = response.source_code
-        this.funcConfig = response.config
-        this.mapFuncData()
-        this.drawFunction()     
-      })
       .catch(function (error) { // 请求失败处理
         console.log(error)
       })
     },
 
-          // 调用图数据处理
+    // 函数调用图的轮询方法
+    startFuncInterval(funcName){
+      // 轮询之前需要先获取到静态信息
+      // 获取实时状态图【变化，需要轮询】
+      axios
+        .get('http://'+this.funcRunningAPI+':8000/running?func='+funcName)
+        .then(response => {
+          this.funcRunningInfo = response.data
+          console.log("当前调用状态",this.funcRunningInfo)
+          
+          //更新this.funcGraphData
+          this.updateGraphData()
+          
+          this.removeFuncGraph()
+          // 更新图
+          this.drawFunction(funcName)
+
+          this.funcUpdateST = setTimeout(() =>{
+            clearTimeout(this.funcUpdateST)
+            this.startFuncInterval(funcName)
+          },3000)    
+         })
+        .catch(function (error) { // 请求失败处理
+          console.log(error);
+        });
+
+
+    },
+
+    getFuncSource(funcName){
+      // 获取源代码和调用图配置【不变】
+      getSource(funcName).then(response =>{
+        this.funcSource = response.source_code
+        this.funcConfig = response.config
+
+        this.mapFuncData()
+      })
+      .catch(function (error) { // 请求失败处理
+        console.log(error)
+      })
+      // 获取函数静态信息，得到running_api【不变】
+      getStatFunc(funcName).then(response =>{
+        this.funcRunningAPI = response.running_api
+        clearTimeout(this.funcUpdateST)
+        this.startFuncInterval(funcName)
+      })
+      .catch(function (error) { // 请求失败处理
+        console.log(error)
+      })
+      
+    },
+    
+    // 调用图数据处理
     mapFuncData(){
       let that = this
       that.funcGraphData = {}
       let n_idx = 0
       let nodes = [],links=[]
       that.funcConfig.forEach((item,index) => {
-        
-        if(index === 0){
+        let inFlag_1 = nodes.find(value  => {
+            return value.name === item[0]
+        })
+        if(index === 0 || inFlag_1 === undefined){
            n_idx = n_idx + 1
             let node_1 = {
             id: n_idx,
             name:item[0],
             label:item[0],
-            group:"User 0",
+            group:"",
             runtime:20
             }
            nodes.push(node_1)
          
         }
-        let inFlag = nodes.find(value  => {
+        let inFlag_2 = nodes.find(value  => {
             return value.name === item[1]
         })
         
-        if(inFlag === undefined){
+        if(inFlag_2 === undefined){
             
             n_idx = n_idx + 1
             
@@ -236,7 +297,7 @@ export default {
                 id: n_idx,
                 name:item[1],
                 label:item[1],
-                group:"User 0",
+                group:"",
                 runtime:30
             }
             nodes.push(node_2)
@@ -251,7 +312,7 @@ export default {
                 e_idx = value.id
             }
         })
-        let link = {
+        const link = {
           source:s_idx,
           target:e_idx,
           type:item[2]
@@ -262,9 +323,27 @@ export default {
       that.funcGraphData['nodes'] = nodes
       that.funcGraphData['links'] = links
 
-    console.log("函数调用数据转化完成",this.funcGraphData)
+   // console.log("函数调用数据转化完成",this.funcGraphData)
 
     },
+    // 更新funcGraphData的信息
+    updateGraphData() {
+      let status = this.funcRunningInfo['running_status']
+      status = this.funcStatus[status]
+      console.log("graph_data_updating",status)
+      this.funcRunningInfo['running_info'].forEach(item => {
+        this.funcGraphData['nodes'].find((value, idx) => {
+          if (value.name === item) {
+            this.funcGraphData['nodes'][idx].group = status
+          }
+          if (value.group === ''){
+            this.funcGraphData['nodes'][idx].group = 1 - status
+          }
+        })
+      })
+      console.log(this.funcGraphData.nodes)
+    },
+
     // 清空整张图
     removeFuncGraph(){
       d3.select('#funcgraph')
@@ -272,22 +351,24 @@ export default {
         .remove();                    //清空SVG中的内容
 
     },
+
+
     // 绘制函数调用图
     drawFunction(){
         // 保证此时数据已经拿到
-        console.log("开始画图")
-        console.log(this.funcGraphData.links)
+        //console.log("开始画图")
+        //console.log(this.funcGraphData.links)
 
       function _margin(){return(
       {top: 30, right: 50, bottom: 5, left: 5}
       )}
 
       function _width(margin){return(
-      400 - margin.left - margin.right
+      500 - margin.left - margin.right
       )}
 
       function _height(margin){return(
-      400 - margin.top - margin.bottom
+      500 - margin.top - margin.bottom
       )}
 
       function ticked() {
@@ -335,6 +416,8 @@ export default {
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .attr("style","margin:0 auto")
+            .attr("id","funcgraph_svg")
+                        
         .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`)
 
@@ -344,8 +427,8 @@ export default {
         .attr('refX',10) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
         .attr('refY',0)
         .attr('orient','auto')
-            .attr('markerWidth',5)
-            .attr('markerHeight',5)
+            .attr('markerWidth',8)
+            .attr('markerHeight',10)
             .attr('xoverflow','visible')
             .attr('yoverflow','visible')
         .append('svg:path')
@@ -355,10 +438,10 @@ export default {
 
         let dataset = this.funcGraphData
 
-        // 颜色
+        // 不同的运行状态颜色
         let colorScale = d3.scaleOrdinal() //=d3.scaleOrdinal(d3.schemeSet2)
-          .domain(["running","stop"])
-          .range(['#ff9e6d'])
+          .domain([1,0])
+          .range(['#00B050',"#FF0000"])
 
         // 初始化边
         const link = svg.selectAll(".links")
@@ -392,7 +475,7 @@ export default {
         .style("pointer-events", "none")
         .attr('class', 'edgelabel')
         .attr('id', function (d, i) {return 'edgelabel' + i})
-        .attr('font-size', 13)
+        .attr('font-size', 7)
         .attr('fill', '#aaa')
 
         // 画边的标签
@@ -429,11 +512,12 @@ export default {
       let simulation = d3.forceSimulation()
               .force("link", d3.forceLink() // This force provides links between nodes
                               .id(d => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
-                              .distance(150)
+                              .distance(60)
               ) 
               
-              .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion (if it's negative) between nodes. 
+              .force("charge", d3.forceManyBody().strength(-20)) // This adds repulsion (if it's negative) between nodes. 
               .force("center", d3.forceCenter(width / 2, height / 2))
+              .force('collide',d3.forceCollide().radius(65).iterations(2));
        simulation
         .nodes(dataset.nodes)
         .on("tick", ticked)
@@ -452,13 +536,35 @@ export default {
 .links { 
 stroke: #999; 
 stroke-opacity: 0.6; 
-stroke-width: 4px; 
+stroke-width: 2px; 
 }
 
 text {
 pointer-events: none;
 fill: #000;
-font: 15px sans-serif;
+font: 11px sans-serif;
 }
-
+.title{
+      -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+    font-size: 20px;
+    border-collapse: separate;
+    color: #909399;
+    text-align: left;
+    user-select: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    line-height: 23px;
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+}
 </style>

@@ -19,7 +19,7 @@ import http from 'axios'
 
 //vue-highlgihtjs
 import VueHighlightJS from 'vue-highlightjs'
-import 'highlight.js/styles/atom-one-dark.css'
+import 'highlight.js/styles/atom-one-light.css'
 
 /**
  * If you don't want to use mock-server

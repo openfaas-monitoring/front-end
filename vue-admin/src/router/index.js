@@ -101,18 +101,18 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/funcgraph',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Funcgraph',
-        component: () => import('@/views/funcgraph/index'),
-        meta: { title: '函数调用图测试页面', icon: 'form' }
-      }
-    ]
-  },
+  // {
+  //   path: '/funcgraph',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Funcgraph',
+  //       component: () => import('@/views/funcgraph/index'),
+  //       meta: { title: '函数调用图测试页面', icon: 'form' }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/nested',
   //   component: Layout,

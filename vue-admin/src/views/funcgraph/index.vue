@@ -25,7 +25,7 @@ export default {
 
     },
     mounted () {
-      this.testFetchData("parallel")
+      this.testFetchData("paralleltest")
  
   },
     methods: {
@@ -46,11 +46,15 @@ export default {
     },
       // 调用图数据处理
     mapFuncData(){
+      let that = this
+      that.funcGraphData = {}
       let n_idx = 0
       let nodes = [],links=[]
-      this.funcConfig.forEach((item,index) => {
-        
-        if(index === 0){
+      that.funcConfig.forEach((item,index) => {
+        let inFlag_1 = nodes.find(value  => {
+            return value.name === item[0]
+        })
+        if(index === 0 || inFlag_1 === undefined){
            n_idx = n_idx + 1
             let node_1 = {
             id: n_idx,
@@ -62,12 +66,11 @@ export default {
            nodes.push(node_1)
          
         }
-
-        let inFlag = nodes.find(value  => {
+        let inFlag_2 = nodes.find(value  => {
             return value.name === item[1]
         })
         
-        if(inFlag === undefined){
+        if(inFlag_2 === undefined){
             
             n_idx = n_idx + 1
             
@@ -80,7 +83,6 @@ export default {
             }
             nodes.push(node_2)
         }
-
         let s_idx,e_idx
 
         nodes.find((value) => {
@@ -99,8 +101,8 @@ export default {
         links.push(link)
 
       })
-      this.funcGraphData['nodes'] = nodes
-      this.funcGraphData['links'] = links
+      that.funcGraphData['nodes'] = nodes
+      that.funcGraphData['links'] = links
 
     console.log("函数调用数据转化完成",this.funcGraphData)
 

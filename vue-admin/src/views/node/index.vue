@@ -1,6 +1,6 @@
 <!-- 服务器模块 -->
 <template>
-  <el-row class="container" :gutter="13" style="padding-top:30px">
+  <el-row class="container" :gutter="13" style="padding-top:20px; margin:0 auto">
     <el-col :span="4" style="margin-top=80px;height:800px;">
       <el-card  style="height:617px;">
         <el-table
@@ -9,7 +9,7 @@
           :v-loading="loading"
           highlight-current-row
           @current-change="handleCurrentChange"
-          style="width: 100%; ">
+          style="width: 100%;overflow:visible; ">
 
           <el-table-column
             property="name"
