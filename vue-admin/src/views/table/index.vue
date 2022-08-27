@@ -10,16 +10,19 @@
   </div>
 </template>
 <template v-if="showSearch">
+<span>
+  搜索结果
+</span>
+<br></br>
    <el-button 
   type="success"
     effect="dark"
     v-on:click="onClick(toShow)">
     {{ toShow+"  "}}
   </el-button>
-   <br/>
-    <br/>
+  
     </template>
-   
+      <el-divider></el-divider>
   <el-button 
   type="success"
     v-for="item in allFunctionList"

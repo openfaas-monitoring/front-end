@@ -32,7 +32,6 @@
           ref="nodeTable"
           :data="nodeList"
           :v-loading="loading"
-          highlight-current-row
           style="width: 100%; ">
 
           <el-table-column
