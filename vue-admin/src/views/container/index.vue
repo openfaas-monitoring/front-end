@@ -1,8 +1,8 @@
 <!--容器模块-->
 <template>
   <el-row class="container" :gutter="20"  style="padding-top:20px; margin:0 auto">
-    <el-col :span="6" style="margin-top=10px; height:800px;">
-      <el-card style="height:617px;">
+    <el-col :span="6" style="margin-top=10px; height:900px; overflow-x:auto;">
+      <el-card style="height:100%">
         <el-table
           ref="podTable"
           :data="podList"
@@ -23,7 +23,7 @@
 
     </el-col>
 
-    <el-col :span="8">
+    <el-col :span="18">
       <el-card>
         <el-descriptions class="server" direction="vertical" border>
           <el-descriptions-item label="所在服务器">
@@ -31,24 +31,27 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
-      
-      <el-card style="height:500px;margin-top:10px;" :span="3">
 
-        <div  style="height:250px; width:100%" ref="cpuLine"></div>
-        <div  style="height:250px" ref="memLine"></div>        
+      <el-col :span="12" style="margin-top:10px;">
+      <el-card style="height:200px;" >
+        <div  style="height:200px;" ref="cpuLine"></div>
       </el-card>
-
+      <el-card style="height:500px; margin-top:10px;" >
+        <div id="funcgraph" style='overflow-x: auto; overflow-y:auto;'></div>
+        
+      </el-card>
+    </el-col>
+    <el-col :span="12" style="margin-top:10px;">
+      <el-card style="height:200px;"  >
+       <div  style="height:200px" ref="memLine"></div>
+      </el-card>
+      <el-card style="height:500px; margin-top:10px;">
+        <pre v-highlightjs="funcSource"><code class="python" style="overflow-x: auto; overflow-y:auto;"></code></pre>
+      </el-card>
+    </el-col>
     </el-col >
 
-    <el-col :span="10">
-      
-      <el-card>
-        <div id="funcgraph" style='overflow-x: auto; overflow-y:auto;'></div>
-      </el-card>
-
-      <el-card >
-          <pre v-highlightjs="funcSource"><code class="python" style="overflow-x: auto;"></code></pre>
-      </el-card>
+    <el-col :span="8">
 
     </el-col>
   </el-row>
@@ -167,19 +170,21 @@ export default {
     },
     // 处理更改列表的选项
     handleCurrentChange(val) {
+      this.removeFuncGraph()
       this.currentPod = val.pod_name // 获得当前容器
       this.currentNode = val.node//当前容器所在结点
       const param = {pod_name:this.currentPod}
+      this.getFuncSource(param.pod_name)
       clearTimeout(this.updateST)
       this.startInterval(param)
-      this.getFuncSource(param)
+      
     },
     // 初始化列表数据
     fetchData() {
       this.listLoading = true
       getContainerList().then(response => {
         this.podList = response.pods
-        this.$refs.podTable.setCurrentRow(this.podList[1])
+        this.$refs.podTable.setCurrentRow(this.podList[0])
         this.currentPod = this.podList[0]
         this.getFuncSource(this.currentPod.pod_name)
         this.listLoading = false
@@ -189,7 +194,6 @@ export default {
     getFuncSource(funcName){
             // 获取函数调用图信息
       getSource(funcName).then(response =>{
-        console.log("获取函数调用图信息")
         this.funcSource = response.source_code
         this.funcConfig = response.config
         this.mapFuncData()
@@ -200,13 +204,13 @@ export default {
       })
     },
 
-
-
           // 调用图数据处理
     mapFuncData(){
+      let that = this
+      that.funcGraphData = {}
       let n_idx = 0
       let nodes = [],links=[]
-      this.funcConfig.forEach((item,index) => {
+      that.funcConfig.forEach((item,index) => {
         
         if(index === 0){
            n_idx = n_idx + 1
@@ -220,7 +224,6 @@ export default {
            nodes.push(node_1)
          
         }
-
         let inFlag = nodes.find(value  => {
             return value.name === item[1]
         })
@@ -238,7 +241,6 @@ export default {
             }
             nodes.push(node_2)
         }
-
         let s_idx,e_idx
 
         nodes.find((value) => {
@@ -257,10 +259,17 @@ export default {
         links.push(link)
 
       })
-      this.funcGraphData['nodes'] = nodes
-      this.funcGraphData['links'] = links
+      that.funcGraphData['nodes'] = nodes
+      that.funcGraphData['links'] = links
 
     console.log("函数调用数据转化完成",this.funcGraphData)
+
+    },
+    // 清空整张图
+    removeFuncGraph(){
+      d3.select('#funcgraph')
+        .selectAll('*')
+        .remove();                    //清空SVG中的内容
 
     },
     // 绘制函数调用图
@@ -268,24 +277,17 @@ export default {
         // 保证此时数据已经拿到
         console.log("开始画图")
         console.log(this.funcGraphData.links)
-        // 计算弦的弧度
-        function linkArc(d) {
-            const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
-            return `
-                M${d.source.x},${d.source.y}
-                A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
-            `;
-        }
+
       function _margin(){return(
       {top: 30, right: 50, bottom: 5, left: 5}
       )}
 
       function _width(margin){return(
-      300 - margin.left - margin.right
+      400 - margin.left - margin.right
       )}
 
       function _height(margin){return(
-      300 - margin.top - margin.bottom
+      400 - margin.top - margin.bottom
       )}
 
       function ticked() {
@@ -296,25 +298,12 @@ export default {
         
         node.attr("transform", d=> `translate(${d.x},${d.y})`)
 
-         edgepaths.attr('d', d => 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y)
+         edgepaths.attr('d', d => 'M' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y)
       }
-        //When the drag gesture starts, the targeted node is fixed to the pointer
-        //The simulation is temporarily “heated” during interaction by setting the target alpha to a non-zero value.
-        function dragstarted(d) {
-              if (!d3.event.active) simulation.alphaTarget(0.3).restart()//sets the current target alpha to the specified number in the range [0,1].
-              d.fy = d.y //fx - the node’s fixed x-position. Original is null.
-              d.fx = d.x //fy - the node’s fixed y-position. Original is null.
-        }
-
-        //When the drag gesture starts, the targeted node is fixed to the pointer
-        function dragged(d) {
-          d.fx = d3.event.x
-          d.fy = d3.event.y
-        }
-
       function drag(simulation){
             function dragstarted(event, d) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
+                if (!event.active) 
+                  simulation.alphaTarget(0.3).restart();
                 d.fx = d.x;
                 d.fy = d.y;
             }
@@ -325,7 +314,8 @@ export default {
             }
             
             function dragended(event, d) {
-                if (!event.active) simulation.alphaTarget(0);
+                if (!event.active) 
+                  simulation.alphaTarget(0);
                 d.fx = null;
                 d.fy = null;
             }
@@ -333,15 +323,12 @@ export default {
             return d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
-                .on("end", dragended);
+                // .on("end", dragended);
             }
 
       let margin = _margin()
       let height = _height(margin)
       let width = _width(margin)
-
-      console.log("drawFunction is called")
-      console.log("margin,height,width",margin,height,width)
 
 
       // 获取div
@@ -349,6 +336,7 @@ export default {
         .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
+            .attr("style","margin:0 auto")
         .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`)
 
@@ -382,7 +370,7 @@ export default {
                 .attr("class", "links")
                 .attr("stroke-width",3)
                 .attr('marker-end','url(#arrowhead)') //The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given shape.
-           
+
         
         // 下面这个是，会以xx方式展示
         link.append("title")
@@ -394,8 +382,8 @@ export default {
                 .enter()
                 .append('path')
                 .attr('class','edgepath')
-                .attr('fill-opacity',1)
-                .attr('stroke-opacity',1)
+                .attr('fill-opacity',0)
+                .attr('stroke-opacity',0)
                 .attr('id', (d,i) => {return 'edgepath'+i})
                 .style("pointer-events","none")
 
@@ -426,7 +414,7 @@ export default {
          .call(drag(simulation));
 
       node.append("circle")
-          .attr("r", d=>4)
+          .attr("r", d=>8)
           .style("stroke-opacity",0)
           .style("stroke-width", 1.5)
           .style("fill", d => colorScale(d.group))
@@ -437,8 +425,7 @@ export default {
             .text(d => d.name)
             .clone(true).lower()
             .attr("fill", "none")
-            .attr("stroke", "white")
-            .attr("stroke-width", 3);
+            .attr("stroke-width", 10);
 
       // simulation
       let simulation = d3.forceSimulation()
@@ -457,35 +444,23 @@ export default {
                 .links(dataset.links)
                       
 
-
-        //drawing the legend
-        const legend_g = svg.selectAll(".legend")
-        .data(colorScale.domain())
-        .enter().append("g") 
-        .attr("transform", (d, i) => `translate(${width},${i * 20})`)
-
-        legend_g.append("circle")
-          .attr("cx", 0)
-          .attr("cy", 0)
-          .attr("r", 5)
-          .attr("fill", colorScale)
-
-        legend_g.append("text")
-          .attr("x", 10)
-          .attr("y", 5)
-          .text(d => d)
       
     },
-
-
-
-
-
-
-
-
-
-
   }
 }
 </script>
+<style>
+
+.links { 
+stroke: #999; 
+stroke-opacity: 0.6; 
+stroke-width: 6px; 
+}
+
+text {
+pointer-events: none;
+fill: #000;
+font: 18px sans-serif;
+}
+
+</style>

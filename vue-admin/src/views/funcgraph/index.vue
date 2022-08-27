@@ -25,7 +25,7 @@ export default {
 
     },
     mounted () {
-      this.testFetchData("looptest")
+      this.testFetchData("parallel")
  
   },
     methods: {
@@ -34,6 +34,7 @@ export default {
         // 获取函数调用图信息
       getSource(funcName).then(response =>{
         console.log("获取指定函数的内容")
+        console.log(response)
         this.funcSource = response.source_code
         this.funcConfig = response.config
         this.mapFuncData()
