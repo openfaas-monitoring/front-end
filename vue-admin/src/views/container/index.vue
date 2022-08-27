@@ -151,12 +151,9 @@ export default {
     startInterval(param){
       getCpuMemRate(param).then(res => {
         // 数据处理 - 每个值*100
-        this.cpuData = res.cpuRate.map(item =>{
-          return [item[0],item[1]*100]
-        })
-        this.memData = res.memRate.map(item =>{
-          return [item[0],item[1]*100]
-        })
+        this.cpuData = res.cpuRate
+        this.memData = res.memRate
+
         this.updateChart()
         this.updateST = setTimeout(() =>{
           clearTimeout(this.updateST)

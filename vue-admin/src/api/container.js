@@ -43,5 +43,5 @@ export const getNodeRate = (param) => {
 	})
 }
 
-// 获取日志信息
+// 获取
 
