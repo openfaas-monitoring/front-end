@@ -302,8 +302,7 @@ export default {
       }
       function drag(simulation){
             function dragstarted(event, d) {
-                if (!event.active) 
-                  simulation.alphaTarget(0.3).restart();
+                if (!event.active) simulation.alphaTarget(0.5).restart();
                 d.fx = d.x;
                 d.fy = d.y;
             }
@@ -314,8 +313,7 @@ export default {
             }
             
             function dragended(event, d) {
-                if (!event.active) 
-                  simulation.alphaTarget(0);
+                if (!event.active) simulation.alphaTarget(0);
                 d.fx = null;
                 d.fy = null;
             }
@@ -323,7 +321,7 @@ export default {
             return d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
-                // .on("end", dragended);
+                //.on("end", dragended);
             }
 
       let margin = _margin()
@@ -359,7 +357,7 @@ export default {
 
         // 颜色
         let colorScale = d3.scaleOrdinal() //=d3.scaleOrdinal(d3.schemeSet2)
-          .domain(["Team A"])
+          .domain(["running","stop"])
           .range(['#ff9e6d'])
 
         // 初始化边
@@ -406,7 +404,7 @@ export default {
               .text(d => d.type)
   
     //  Initialize the nodes 让结点能被拖拽
-      const node = svg.selectAll(".nodes")
+      let node = svg.selectAll(".nodes")
           .data(dataset.nodes)
           .enter()
           .append("g")
@@ -414,7 +412,7 @@ export default {
          .call(drag(simulation));
 
       node.append("circle")
-          .attr("r", d=>8)
+          .attr("r", d=>6)
           .style("stroke-opacity",0)
           .style("stroke-width", 1.5)
           .style("fill", d => colorScale(d.group))
@@ -431,10 +429,10 @@ export default {
       let simulation = d3.forceSimulation()
               .force("link", d3.forceLink() // This force provides links between nodes
                               .id(d => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
-                              .distance(120)
+                              .distance(150)
               ) 
               
-              .force("charge", d3.forceManyBody().strength(-700)) // This adds repulsion (if it's negative) between nodes. 
+              .force("charge", d3.forceManyBody().strength(-200)) // This adds repulsion (if it's negative) between nodes. 
               .force("center", d3.forceCenter(width / 2, height / 2))
        simulation
         .nodes(dataset.nodes)
@@ -454,13 +452,13 @@ export default {
 .links { 
 stroke: #999; 
 stroke-opacity: 0.6; 
-stroke-width: 6px; 
+stroke-width: 4px; 
 }
 
 text {
 pointer-events: none;
 fill: #000;
-font: 18px sans-serif;
+font: 15px sans-serif;
 }
 
 </style>
