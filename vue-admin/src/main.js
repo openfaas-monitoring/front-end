@@ -17,6 +17,9 @@ import '@/permission' // permission control
 
 import http from 'axios'
 
+//vue-highlgihtjs
+import VueHighlightJS from 'vue-highlightjs'
+import 'highlight.js/styles/atom-one-dark.css'
 
 /**
  * If you don't want to use mock-server
@@ -37,6 +40,9 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 Vue.prototype.$http = http
 Vue.config.productionTip = false
+
+// Tell Vue.js to use vue-highlightjs
+Vue.use(VueHighlightJS)
 
 new Vue({
   el: '#app',

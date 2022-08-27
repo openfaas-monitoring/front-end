@@ -43,7 +43,6 @@ export default {
         console.log(error)
       });
     },
- 
       // 调用图数据处理
     mapFuncData(){
       let n_idx = 0
@@ -110,7 +109,14 @@ export default {
         // 保证此时数据已经拿到
         console.log("开始画图")
         console.log(this.funcGraphData.links)
-
+        // 计算弦的弧度
+        function linkArc(d) {
+            const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
+            return `
+                M${d.source.x},${d.source.y}
+                A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
+            `;
+        }
       function _margin(){return(
       {top: 30, right: 80, bottom: 5, left: 5}
       )}
@@ -146,13 +152,37 @@ export default {
           d.fx = d3.event.x
           d.fy = d3.event.y
         }
+
+      function drag(simulation){
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+            
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+            }
+
       let margin = _margin()
       let height = _height(margin)
       let width = _width(margin)
 
       console.log("drawFunction is called")
       console.log("margin,height,width",margin,height,width)
-
 
 
       // 获取div
@@ -166,7 +196,7 @@ export default {
       svg.append('defs').append('marker')
         .attr("id",'arrowhead')
         .attr('viewBox','-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-        .attr('refX',23) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+        .attr('refX',10) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
         .attr('refY',0)
         .attr('orient','auto')
             .attr('markerWidth',13)
@@ -190,8 +220,10 @@ export default {
                 .enter()
                 .append("line")
                 .attr("class", "links")
+                .attr("stroke-width",1.5)
                 .attr('marker-end','url(#arrowhead)') //The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given shape.
-
+           
+        
         // 下面这个是，会以xx方式展示
         link.append("title")
             .text(d => d.type) 
@@ -223,42 +255,40 @@ export default {
               .style("text-anchor", "middle")
               .style("pointer-events", "none")
               .attr("startOffset", "50%")
+               .attr("x", 0)
+              .attr("y", 0)
               .text(d => d.type)
   
-      // Initialize the nodes 让结点能被拖拽
+    //  Initialize the nodes 让结点能被拖拽
       const node = svg.selectAll(".nodes")
           .data(dataset.nodes)
           .enter()
           .append("g")
           .attr("class", "nodes")
-          .call(d3.drag() //sets the event listener for the specified typenames and returns the drag behavior.
-              .on("start", dragstarted) //start - after a new pointer becomes active (on mousedown or touchstart).
-              .on("drag", dragged)      //drag - after an active pointer moves (on mousemove or touchmove).
-              //.on("end", dragended)     //end - after an active pointer becomes inactive (on mouseup, touchend or touchcancel).
-          )
+         .call(drag(simulation));
 
       node.append("circle")
-          .attr("r", d=>18)
+          .attr("r", d=>4)
           .style("stroke-opacity",0)
-          .style("stroke-width", 20)
+          .style("stroke-width", 1.5)
           .style("fill", d => colorScale(d.group))
 
-      node.append("title")
-          .text(d => d.id + ": " + d.label + " - ")
+        node.append("text")
+            .attr("x", 8)
+            .attr("y", "0.31em")
+            .text(d => d.name)
+            .clone(true).lower()
+            .attr("fill", "none")
+            .attr("stroke", "white")
+            .attr("stroke-width", 3);
 
-      node.append("text")
-          .attr("dy", 4)
-          .attr("dx", -15)
-          .attr("font-size",20)
-          .text(d => d.name)
-  
-      
       // simulation
       let simulation = d3.forceSimulation()
               .force("link", d3.forceLink() // This force provides links between nodes
                               .id(d => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
                               .distance(120)
               ) 
+              
               .force("charge", d3.forceManyBody().strength(-700)) // This adds repulsion (if it's negative) between nodes. 
               .force("center", d3.forceCenter(width / 2, height / 2))
        simulation
@@ -287,7 +317,154 @@ export default {
           .attr("y", 5)
           .text(d => d)
       
+    },
+
+    // 另一种画图的方式 - 更新
+    mapFuncData_2(){
+      let nodes = [],links=[]
+      this.funcConfig.forEach((item,index) => {
+        
+        if(index === 0){
+
+            let node_1 = {
+            id: item[0],
+            }
+           nodes.push(node_1)
+         
+        }
+
+        let inFlag = nodes.find(value  => {
+            return value.name === item[1]
+        })
+        
+        if(inFlag === undefined){
+            
+            let node_2 = {
+                id: item[1],
+            }
+            nodes.push(node_2)
+        }
+        let link = {
+          source:item[0],
+          target:item[1],
+          type:item[2]
+        }
+        links.push(link)
+
+      })
+      this.funcGraphData['nodes'] = nodes
+      this.funcGraphData['links'] = links
+    },
+
+    drawFunction_2(){
+        const data = this.funcGraphData
+        const types = ['User 0']
+        // 定义颜色
+        const color = d3.scaleOrdinal(types, d3.schemeCategory10)
+        // 计算弦的弧度
+        function linkArc(d) {
+            const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
+            return `
+                M${d.source.x},${d.source.y}
+                A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
+            `;
+        }
+        // 定义拖拽函数
+        function drag(simulation){
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+            
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+            }
+
+        const links = data.links.map(d => Object.create(d));
+        const nodes = data.nodes.map(d => Object.create(d));
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id))
+            .force("charge", d3.forceManyBody().strength(-400))
+            .force("x", d3.forceX())
+            .force("y", d3.forceY());
+
+        let height = 600, width = 600
+        const svg = d3.select("#funcgraph")
+            .append("svg")
+            .attr("viewBox", [-width / 2, -height / 2, width, height])
+            .style("font", "12px sans-serif");
+
+        // Per-type markers, as they don't inherit styles.
+        svg.append("defs").selectAll("marker")
+            .data(types)
+            .join("marker")
+            .attr("id", d => `arrow-${d}`)
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 15)
+            .attr("refY", -0.5)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("fill", '#999')
+            .attr("d", "M0,-5L10,0L0,5");
+
+        const link = svg.append("g")
+            .attr("fill", "none")
+            .attr("stroke-width", 10)
+            .selectAll("path")
+            .data(links)
+            .join("path")
+            .attr("stroke", d => color(d.type))
+            .attr("marker-end", d =>  `url(${new URL(`#arrow-${d.type}`, location)})`);
+
+        const node = svg.append("g")
+            .attr("fill", "currentColor")
+            .attr("stroke-linecap", "round")
+            .attr("stroke-linejoin", "round")
+            .selectAll("g")
+            .data(nodes)
+            .join("g")
+            .call(drag(simulation));
+
+        node.append("circle")
+            .attr("stroke", "white")
+            .attr("stroke-width", 1.5)
+            .attr("r", 4);
+
+        node.append("text")
+            .attr("x", 8)
+            .attr("y", "0.31em")
+            .text(d => d.id)
+            .clone(true).lower()
+            .attr("fill", "none")
+            .attr("stroke", "white")
+            .attr("stroke-width", 3);
+
+        simulation.on("tick", () => {
+            link.attr("d", linkArc);
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        invalidation.then(() => simulation.stop());
+
     }
+
     },
    
 
