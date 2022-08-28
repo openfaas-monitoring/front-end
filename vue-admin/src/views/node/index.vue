@@ -48,17 +48,21 @@
     <el-col :span="8">
       <el-card style="height:300px;" id="cpuLine" >
         <div  style="height:300px;" ref="cpuLine"></div>
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
       </el-card>
       <el-card style=" height:300px;margin-top:20px;" id="memLine" >
         <div  style="height:300px" ref="memLine"></div>
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
       </el-card>
     </el-col>
     <el-col :span="8">
       <el-card style="height:300px;"  id="IOLine">
         <div  style="height:300px" ref="IOLine"></div>
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
       </el-card>
       <el-card style=" height:300px;margin-top:20px;"  id="netLine">
         <div  style="height:300px" ref="netLine"></div>
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
       </el-card>
     </el-col>
 
@@ -137,7 +141,9 @@ export default {
         let option = {
           xAxis:{
             type:'time',
-            name:"60s"
+            name:"60s",
+            show: false, // 不显示坐标轴上的文字
+
           },
           yAxis:{
             name:'%',
@@ -171,9 +177,9 @@ export default {
         let option = {
           xAxis:{
             type:'time',
-            areaStyle:{},
-            position:'center',
-            name:"60s"
+            name:"60s",
+            show: false, // 不显示坐标轴上的文字
+
           },
           yAxis:{
             type:'value',

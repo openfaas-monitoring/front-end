@@ -35,6 +35,7 @@
       <el-col :span="12" style="margin-top:10px;">
       <el-card style="height:200px;" >
         <div  style="height:200px;" ref="cpuLine"></div>
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
       </el-card>
       <el-card style="height:500px; margin-top:10px;" >
 
@@ -45,6 +46,7 @@
     <el-col :span="12" style="margin-top:10px;">
       <el-card style="height:200px;"  >
        <div  style="height:200px" ref="memLine"></div>
+       <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
       </el-card>
       <el-card style="height:500px; margin-top:10px; padding-bottom:20px">
 
@@ -126,6 +128,10 @@ export default {
     // 更新单个图表
     updateSingleChart(myLabel,mydata,myLine){
         let series = []
+        let xArr = Array(60)
+        for(var i=0;i<xArr.length;i++){
+            xArr[i] = i+1;
+        }
 
         series.push({
             name:myLabel,
@@ -144,7 +150,17 @@ export default {
         
         const option = {
           xAxis:{
-            type:"time",
+            // type:'time',
+            data:xArr,
+          //   axisLabel: {
+          //       min:0,
+          //       max:60,
+          //       interval:1,
+          //       // show: false, // 不显示坐标轴上的文字
+          // },
+            type:'time',
+            show:false,
+            
           },
           yAxis:{
 
@@ -170,6 +186,13 @@ export default {
       getCpuMemRate(param).then(res => {
         // 数据处理
         this.cpuData = res.cpuRate
+
+        // let tempArr = []
+        // res.cpuRate.forEach(item => {
+        //   tempArr.push(item[1])
+        // })
+        // this.cpuData = tempArr
+
         this.memData = res.memRate
 
         this.updateChart()
@@ -279,7 +302,7 @@ export default {
             id: n_idx,
             name:item[0],
             label:item[0],
-            group:"",
+            group:0,
             runtime:20
             }
            nodes.push(node_1)
@@ -297,7 +320,7 @@ export default {
                 id: n_idx,
                 name:item[1],
                 label:item[1],
-                group:"",
+                group:0,
                 runtime:30
             }
             nodes.push(node_2)
@@ -330,14 +353,17 @@ export default {
     updateGraphData() {
       let status = this.funcRunningInfo['running_status']
       status = this.funcStatus[status]
+      let changeFlag = false
       console.log("graph_data_updating",status)
       this.funcRunningInfo['running_info'].forEach(item => {
         this.funcGraphData['nodes'].find((value, idx) => {
           if (value.name === item) {
             this.funcGraphData['nodes'][idx].group = status
+            changeFlag = true
           }
-          if (value.group === ''){
+          if (!changeFlag){
             this.funcGraphData['nodes'][idx].group = 1 - status
+            changeFlag = false
           }
         })
       })
