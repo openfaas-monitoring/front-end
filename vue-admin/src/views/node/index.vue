@@ -178,9 +178,9 @@ export default {
           xAxis:{
             type:'time',
             name:"60s",
-          axisLabel: {
+         
             show: false, // 不显示坐标轴上的文字
-            }
+            
           },
           yAxis:{
             type:'value',
