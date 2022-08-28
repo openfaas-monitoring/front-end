@@ -92,7 +92,7 @@
 
       <el-card style="height:500px;margin-top:0px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
-        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60</div>
+        <div style="margin-top:-55px;margin-right:-80px;font-size: 13px;">  0 - 60</div>
         <div  style="height:250px" ref="memLine"></div>      
         <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60</div>  
       </el-card>

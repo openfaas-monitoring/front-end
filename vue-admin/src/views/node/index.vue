@@ -178,7 +178,6 @@ export default {
           xAxis:{
             type:'time',
             name:"60s",
-         
             show: false, // 不显示坐标轴上的文字
             
           },
