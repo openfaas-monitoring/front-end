@@ -35,7 +35,7 @@
       <el-col :span="12" style="margin-top:10px;">
       <el-card style="height:200px;" >
         <div  style="height:200px;" ref="cpuLine"></div>
-        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60</div>
       </el-card>
       <el-card style="height:500px; margin-top:10px;" >
 
@@ -46,7 +46,7 @@
     <el-col :span="12" style="margin-top:10px;">
       <el-card style="height:200px;"  >
        <div  style="height:200px" ref="memLine"></div>
-       <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60秒</div>
+       <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60</div>
       </el-card>
       <el-card style="height:500px; margin-top:10px; padding-bottom:20px">
 
