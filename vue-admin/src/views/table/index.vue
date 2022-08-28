@@ -344,8 +344,6 @@ Date.prototype.Format = function (fmt) {
             show:false,
           },
           yAxis:{
-            min:0,
-            max:100
           },
           legend:{
             data:[myLabel]
@@ -366,7 +364,7 @@ Date.prototype.Format = function (fmt) {
     // 轮询方法
     startInterval(param){
       getCpuMemRate(param).then(res => {
-        // 数据处理 - 每个值*100
+        // 数据处理
         this.cpuData = res.cpuRate.map(item =>{
           return [item[0],item[1]]
         })
