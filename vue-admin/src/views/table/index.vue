@@ -92,7 +92,9 @@
 
       <el-card style="height:500px;margin-top:0px;" :span="3">
         <div  style="height:250px" ref="cpuLine"></div>
-        <div  style="height:250px" ref="memLine"></div>        
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60</div>
+        <div  style="height:250px" ref="memLine"></div>      
+        <div style="margin-top:-55px;margin-right:-10px;font-size: 13px;">  0 - 60</div>  
       </el-card>
 
     <!-- </el-col> -->
@@ -339,6 +341,7 @@ Date.prototype.Format = function (fmt) {
         const option = {
           xAxis:{
             type:"time",
+            show:false,
           },
           yAxis:{
             min:0,
@@ -365,10 +368,10 @@ Date.prototype.Format = function (fmt) {
       getCpuMemRate(param).then(res => {
         // 数据处理 - 每个值*100
         this.cpuData = res.cpuRate.map(item =>{
-          return [item[0],item[1]*100]
+          return [item[0],item[1]]
         })
         this.memData = res.memRate.map(item =>{
-          return [item[0],item[1]*100]
+          return [item[0],item[1]]
         })
         this.updateChart()
         this.updateST = setTimeout(() =>{
