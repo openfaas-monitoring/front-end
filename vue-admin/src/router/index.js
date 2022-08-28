@@ -89,7 +89,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Node',
         component: () => import('@/views/node/index'),
-        meta: { title: '服务器模块', icon: 'form' }
+        meta: { title: '服务器模块', icon: 'nested' }
       }
     ]
   },

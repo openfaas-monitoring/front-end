@@ -48,7 +48,7 @@
           <div class="card-panel-text">
             运行时间/h
           </div>
-          <count-to :start-val="0" :end-val="1660468/3600" :duration="36" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="1660468/3600+80" :duration="36" class="card-panel-num" />
         </div>
       </div>
     </el-col>

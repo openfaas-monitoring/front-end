@@ -29,3 +29,11 @@ export const getSource =(param) =>{
 		param
 	})
 }
+// 获取函数的静态信息
+export const getStatFunc =(funcName) =>{
+	return request({
+		url:'/static/function?func='+funcName,
+		method:'get',
+		funcName
+	})
+}
