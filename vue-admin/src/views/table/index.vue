@@ -344,6 +344,7 @@ Date.prototype.Format = function (fmt) {
             show:false,
           },
           yAxis:{
+            name:'%',
           },
           legend:{
             data:[myLabel]

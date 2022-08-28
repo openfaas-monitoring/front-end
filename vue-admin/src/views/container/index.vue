@@ -163,8 +163,8 @@ export default {
             
           },
           yAxis:{
-
-    },
+            name:'%',
+          },
           legend:{
             data:[myLabel]
           },
