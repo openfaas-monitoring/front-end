@@ -1,6 +1,6 @@
 <template>
 <div class="mixin-components-container">
-  
+
         <div slot="header" class="clearfix">
           <h3>please select a function</h3>
         </div>
@@ -84,9 +84,7 @@
       <el-card>
            <h3 style="color:grey">日志
             </h3>
-        <span>
-           {{this.log}}
-        </span>
+      <span v-html='log'></span>
      
       </el-card>
     </el-col>
@@ -287,7 +285,8 @@ Date.prototype.Format = function (fmt) {
         console.log(error);
       });
         getLog(funcName).then(response => {
-        this.log =  response.logs
+        this.log =  response.logs.replaceAll("\n","<br>");
+
        this.dynamicFuncInfo.get(funcName).log = response.logs
        
       })

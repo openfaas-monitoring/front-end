@@ -136,13 +136,14 @@ export default {
         
         let option = {
           xAxis:{
-            type:'time'
+            type:'time',
+            name:"60s"
           },
-          // yAxis:{
-          //   name:'%',
-          //   min:0,
-          //   max:100
-          // },
+          yAxis:{
+            name:'%',
+            // min:0,
+            // max:100
+          },
           legend:{
             data:[A_label,B_label]
           },
@@ -171,7 +172,8 @@ export default {
           xAxis:{
             type:'time',
             areaStyle:{},
-            position:'center'
+            position:'center',
+            name:"60s"
           },
           yAxis:{
             type:'value',

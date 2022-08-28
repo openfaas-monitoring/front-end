@@ -530,7 +530,22 @@ export default {
 
         simulation.force("link")
                 .links(dataset.links)
-                      
+          //drawing the legend
+        const legend_g = svg.selectAll(".legend")
+        .data(["running","stop"])
+        .enter().append("g") 
+        .attr("transform", (d, i) => `translate(${width-100},${i*20})`); 
+
+        legend_g.append("circle")
+          .attr("cx", -20)
+          .attr("cy", 0)
+          .attr("r", 5)
+          .attr("fill", colorScale);
+
+        legend_g.append("text")
+          .attr("x", 10)
+          .attr("y", 5)
+          .text(d => d);
 
       
     },
