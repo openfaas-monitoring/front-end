@@ -206,7 +206,7 @@ export default {
     // 轮询方法
     startInterval(param){
       getNodeRate(param).then(res => {
-        // 数据处理 - 每个值*100
+        // 数据处理 
         this.cpuData = res.cpuRate
         this.memData = res.memRate
         this.diskRead = res.diskRead

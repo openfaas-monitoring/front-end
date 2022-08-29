@@ -557,6 +557,7 @@ export default {
 
         simulation.force("link")
                 .links(dataset.links)
+                
         //   //drawing the legend
         // const legend_g = svg.selectAll(".legend")
         // .data(["running","stop"])
