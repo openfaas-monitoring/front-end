@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">OpenFaas监控平台</h3>
       </div>
 
       <el-form-item prop="username">
@@ -47,7 +47,11 @@
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
       </div>
-
+      <div class="tips">
+        <span style="margin-right:20px;">后端: 帅英豪 刘子千 </span>
+        <span style="margin-right:20px;">前端: 谭芷妍 薛桐垚</span>
+        <span style="margin-right:20px;"> 指导： 封彬彬 丁志军</span>
+      </div>
     </el-form>
   </div>
 </template>
@@ -126,8 +130,7 @@ export default {
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+
 
 $bg:#283443;
 $light_gray:#fff;
